@@ -8,20 +8,30 @@ import os
 
 
 class DriveService:
-    def __init__(self, driver=None):
-        if driver == None:
-            SCOPES = 'https://www.googleapis.com/auth/drive.file'
-            store = file.Storage('credentials.json')
-            creds = store.get()
-            if not creds or creds.invalid:
-                flow = client.flow_from_clientsecrets(
-                    'client_secret.json', SCOPES)
-                creds = tools.run_flow(flow, store)
-            drive_service = build('drive', 'v3', http=creds.authorize(Http()))
-        else:
-            drive_service = driver
+    def __init__(self, client_secret):
+        
+        client_secret_path = os.path.abspath(client_secret)
+        has_client_secret = os.path.isfile(client_secret_path)
 
-        self.drive_service = drive_service
+        if not has_client_secret:
+            link = 'https://developers.google.com/drive/api/v3/quickstart/python'
+            raise NameError(
+                '<client_secret.json> not Found. Access the following link and go to step one to get your client_secret.json file:\n {0}'.format(link))
+
+        self.client_secret = client_secret_path
+
+    def auth(self):
+        current_dir = os.getcwd()
+        credentials_dir = os.path.join(current_dir, os.path.abspath('./credentials'))
+        if not os.path.exists(credentials_dir):
+            os.makedirs(credentials_dir)
+        SCOPES = 'https://www.googleapis.com/auth/drive.file'
+        store = file.Storage(credentials_dir + '/credentials.json')
+        creds = store.get()
+        if not creds or creds.invalid:
+            flow = client.flow_from_clientsecrets(self.client_secret, SCOPES)
+            creds = tools.run_flow(flow, store)
+        self.drive_service = build('drive', 'v3', http=creds.authorize(Http()))
 
     def create_folder(self, name, parent_id=None):
         metadata = {
@@ -169,5 +179,3 @@ class DriveService:
             print(exception)
         else:
             pass
-
-
