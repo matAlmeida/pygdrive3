@@ -1,7 +1,6 @@
 # GDrive Python
 
 ![PyPI](https://img.shields.io/pypi/v/pygdrive3.svg)
-![PyPI - License](https://img.shields.io/pypi/l/pygdrive3.svg)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pygdrive3.svg)
 
 
