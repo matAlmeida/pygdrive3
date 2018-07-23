@@ -1,6 +1,7 @@
 # Google API Credentials
 client_secret.json
 credentials.json
+credentials
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
