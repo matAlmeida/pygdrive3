@@ -9,7 +9,7 @@ import os
 
 class DriveService:
     def __init__(self, client_secret):
-        
+
         client_secret_path = os.path.abspath(client_secret)
         has_client_secret = os.path.isfile(client_secret_path)
 
@@ -22,10 +22,11 @@ class DriveService:
 
     def auth(self):
         current_dir = os.getcwd()
-        credentials_dir = os.path.join(current_dir, os.path.abspath('./credentials'))
+        credentials_dir = os.path.join(
+            current_dir, os.path.abspath('./credentials'))
         if not os.path.exists(credentials_dir):
             os.makedirs(credentials_dir)
-        SCOPES = 'https://www.googleapis.com/auth/drive.file'
+        SCOPES = 'https://www.googleapis.com/auth/drive'
         store = file.Storage(credentials_dir + '/credentials.json')
         creds = store.get()
         if not creds or creds.invalid:
@@ -34,11 +35,17 @@ class DriveService:
         self.drive_service = build('drive', 'v3', http=creds.authorize(Http()))
 
     def create_folder(self, name, parent_id=None):
-        metadata = {
-            'name': name,
-            'mimeType': 'application/vnd.google-apps.folder',
-            'parents': [parent_id]
-        }
+        if parent_id != None:
+            metadata = {
+                'name': name,
+                'mimeType': 'application/vnd.google-apps.folder',
+                'parents': [parent_id]
+            }
+        else:
+            metadata = {
+                'name': name,
+                'mimeType': 'application/vnd.google-apps.folder'
+            }
 
         folder = self.drive_service.files().create(
             body=metadata,
@@ -61,13 +68,10 @@ class DriveService:
         file = self.drive_service.files().create(
             body=file_metadata,
             media_body=media,
-            fields='id webViewLink'
+            fields='id'
         ).execute()
 
-        return {
-            'id': file.get('id'),
-            'link': file.get('webViewLink')
-        }
+        return file.get('id')
 
     def writer_permission(self, email, file_id):
         batch = self.drive_service.new_batch_http_request(
@@ -100,7 +104,7 @@ class DriveService:
         ))
         batch.execute()
 
-        return {'link': 'https://drive.google.com/file/d/{0}/view?usp=sharing'.format(file_id)}
+        return 'https://drive.google.com/file/d/{0}/view?usp=sharing'.format(file_id)
 
     def list_folders_by_name(self, name):
         return self.__list_items_by_name(name, "mimeType = 'application/vnd.google-apps.folder'")
@@ -117,7 +121,7 @@ class DriveService:
                 q="'" + folder_id + "' in parents",
                 spaces='drive',
                 fields='nextPageToken, files(id, name, modifiedTime, mimeType, size)',
-                pageToken=page_token
+                page_token=page_token
             ).execute()
 
             for file in response.get('files', []):
@@ -134,6 +138,29 @@ class DriveService:
                 break
 
         return itemsList
+
+    # def list_files_by_name(self, name):
+    #     query = 'name contains "{0}"'.format(name)
+    #     items = []
+    #     page_token = None
+    #     while True:
+    #         list_buffer = self.drive_service.files().list(
+    #             q=query,
+    #             fields='nextPageToken, files(id, name)',
+    #             page_token=page_token
+    #         ).execute()
+
+    #         for file in list_buffer.get('files', []):
+    #             items.append({
+    #                 'id': file.get('id'),
+    #                 'name': file.get('name')
+    #             })
+
+    #         page_token = list_buffer.get('nextPageToken', None)
+    #         if page_token == None:
+    #             break
+
+    #     return items
 
     def __list_items_by_name(self, name, extraQuery=None):
         if len(name.split(' ')) > 1:
