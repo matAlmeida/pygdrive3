@@ -116,6 +116,7 @@ class DriveService:
             'emailAddress': email
         }
         batch.add(self.drive_service.permissions().create(
+            transferOwnership=True,
             fileId=file_id,
             body=permission,
             fields='id',
