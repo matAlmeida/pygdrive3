@@ -90,6 +90,23 @@ class DriveService:
 
         return True
 
+    def reader_permission(self, email, file_id):
+        batch = self.drive_service.new_batch_http_request(
+            callback=self.__callback)
+        permission = {
+            'type': 'user',
+            'role': 'reader',
+            'emailAddress': email
+        }
+        batch.add(self.drive_service.permissions().create(
+            fileId=file_id,
+            body=permission,
+            fields='id',
+        ))
+        batch.execute()
+
+        return True
+
     def anyone_permission(self, file_id):
         batch = self.drive_service.new_batch_http_request(
             callback=self.__callback)
