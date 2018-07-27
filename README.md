@@ -6,7 +6,7 @@
 
 ## Installing
 ```sh
-$ pip install pygdrive3=0.2.0
+$ pip install pygdrive3==0.2.0
 ```
 
 ## Usage
