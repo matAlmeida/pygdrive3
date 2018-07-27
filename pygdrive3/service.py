@@ -112,7 +112,7 @@ class DriveService:
             callback=self.__callback)
         permission = {
             'type': 'user',
-            'role': 'organizer/owner',
+            'role': 'owner',
             'emailAddress': email
         }
         batch.add(self.drive_service.permissions().create(
