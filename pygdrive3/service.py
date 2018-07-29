@@ -107,7 +107,7 @@ class DriveService:
 
         return True
 
-    def owner_permission(self, email, file_id):
+    def transfer_ownership(self, email, file_id):
         batch = self.drive_service.new_batch_http_request(
             callback=self.__callback)
         permission = {
