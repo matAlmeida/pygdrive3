@@ -141,12 +141,6 @@ class DriveService:
 
         return 'https://drive.google.com/file/d/{0}/view?usp=sharing'.format(file_id)
 
-    def list_folders_by_name(self, name):
-        return self.__list_items_by_name(name, "mimeType = 'application/vnd.google-apps.folder'")
-
-    def list_files_by_name(self, name):
-        return self.__list_items_by_name(name, "mimeType != 'application/vnd.google-apps.folder'")
-
     def list_files_from_folder_id(self, folder_id):
         itemsList = []
 
@@ -174,41 +168,19 @@ class DriveService:
 
         return itemsList
 
-    # def list_files_by_name(self, name):
-    #     query = 'name contains "{0}"'.format(name)
-    #     items = []
-    #     page_token = None
-    #     while True:
-    #         list_buffer = self.drive_service.files().list(
-    #             q=query,
-    #             fields='nextPageToken, files(id, name)',
-    #             page_token=page_token
-    #         ).execute()
+    def list_folders_by_name(self, name):
+        return self.__list_items_by_name(name, "mimeType = 'application/vnd.google-apps.folder'")
 
-    #         for file in list_buffer.get('files', []):
-    #             items.append({
-    #                 'id': file.get('id'),
-    #                 'name': file.get('name')
-    #             })
-
-    #         page_token = list_buffer.get('nextPageToken', None)
-    #         if page_token == None:
-    #             break
-
-    #     return items
+    def list_files_by_name(self, name):
+        return self.__list_items_by_name(name, "mimeType != 'application/vnd.google-apps.folder'")
 
     def __list_items_by_name(self, name, extraQuery=None):
-        if len(name.split(' ')) > 1:
-            query = ''
-            for nm in name.split(' '):
-                query += 'name contains ' + nm + ' and '
-            query = query[:-5]
-        else:
-            query = name
+        query = 'name contains \'' + name + '\''
 
         if extraQuery != None:
             query += " and " + extraQuery
 
+        print(query)
         itemsList = []
 
         page_token = None
