@@ -202,11 +202,7 @@ class DriveService:
             for file in response.get('files', []):
                 # Process change
                 itemsList.append({
-                    'id': file.get('id'),
-                    'name': file.get('name'),
-                    'modifiedTime': file.get('modifiedTime'),
-                    'type': file.get('mimeType'),
-                    'size': file.get('size')
+                    'id': file.get('id')
                 })
             page_token = response.get('nextPageToken', None)
             if page_token is None:
