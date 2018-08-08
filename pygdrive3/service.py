@@ -141,6 +141,13 @@ class DriveService:
 
         return 'https://drive.google.com/file/d/{0}/view?usp=sharing'.format(file_id)
 
+    def get_file_info(self, file_id):
+        fields = "kind,name,mimeType,description,parents,version,createdTime,modifiedTime,lastModifyingUser,size"
+
+        file = self.drive_service.files().get(fileId=file_id, fields=fields).execute()
+
+        return file
+
     def list_files_from_folder_id(self, folder_id):
         itemsList = []
 
@@ -195,11 +202,7 @@ class DriveService:
             for file in response.get('files', []):
                 # Process change
                 itemsList.append({
-                    'id': file.get('id'),
-                    'name': file.get('name'),
-                    'modifiedTime': file.get('modifiedTime'),
-                    'type': file.get('mimeType'),
-                    'size': file.get('size')
+                    'id': file.get('id')
                 })
             page_token = response.get('nextPageToken', None)
             if page_token is None:
