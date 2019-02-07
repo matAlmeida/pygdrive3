@@ -2,6 +2,7 @@
 
 ![PyPI](https://img.shields.io/pypi/v/pygdrive3.svg)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pygdrive3.svg)
+![PyPiStat - Monthly Download](https://img.shields.io/pypi/dm/pygdrive3.svg?style=flat)
 
 ## Installing
 
