@@ -3,7 +3,7 @@
 ![License](https://img.shields.io/pypi/l/pygdrive3.svg?style=flat)
 ![PyPI](https://img.shields.io/pypi/v/pygdrive3.svg)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pygdrive3.svg)
-![PyPiStat - Monthly Download](https://img.shields.io/pypi/dm/pygdrive3.svg?style=flat)
+[![Downloads](https://pepy.tech/badge/pygdrive3)](https://pepy.tech/project/pygdrive3)
 
 ## Installing
 
