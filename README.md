@@ -5,6 +5,10 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pygdrive3.svg)
 [![Downloads](https://pepy.tech/badge/pygdrive3)](https://pepy.tech/project/pygdrive3)
 
+## Contribute
+
+`If you found any missing feature please create an issue on that github repo or make your pull request.`
+
 ## Installing
 
 ```sh
