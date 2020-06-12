@@ -54,16 +54,18 @@ class DriveService:
 
         return folder.get('id')
 
-    def upload_file(self, name, filePath, folder_id):
-        fileType = mimetypes.guess_type(filePath)[0]
-        if fileType == None:
-            raise NameError("Invalid type or missing suffix!")
+    def upload_file(self, name, file_path, folder_id, mime_type = None):
+        fileType = mime_type
+        if(mime_type == None):
+            fileType = mimetypes.guess_type(file_path)[0]
+            if fileType == None:
+                raise NameError("Invalid type. Provide a mime_type or add the file suffix!")
 
         file_metadata = {
-            'name': name + '.' + fileType.split('/')[-1],
+            'name': name,
             'parents': [folder_id]
         }
-        media = MediaFileUpload(filePath, mimetype=fileType)
+        media = MediaFileUpload(file_path, mimetype=fileType)
 
         file = self.drive_service.files().create(
             body=file_metadata,
