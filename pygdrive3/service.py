@@ -5,7 +5,7 @@ from httplib2 import Http
 from oauth2client import file, client, tools
 import mimetypes
 import os
-
+import re
 
 class DriveService:
     def __init__(self, client_secret):
@@ -33,6 +33,10 @@ class DriveService:
             flow = client.flow_from_clientsecrets(self.client_secret, SCOPES)
             creds = tools.run_flow(flow, store)
         self.drive_service = build('drive', 'v3', http=creds.authorize(Http()))
+    
+    def getIdFromUrl(self, url):
+        regex = "(?<=/folders/)([\w-]+)|(?<=%2Ffolders%2F)([\w-]+)|(?<=/file/d/)([\w-]+)|(?<=%2Ffile%2Fd%2F)([\w-]+)|(?<=id=)([\w-]+)|(?<=id%3D)([\w-]+)"
+        return re.search(regex,url)
 
     def create_folder(self, name, parent_id=None):
         if parent_id != None:
@@ -53,6 +57,26 @@ class DriveService:
         ).execute()
 
         return folder.get('id')
+
+    def add_file_shortcut(self, file_id, file_name = '', folder_id = ''):
+        mime_type = 'application/vnd.google-apps.shortcut'
+
+        shortcut_metadata = {
+            'mimeType': mime_type,
+            'shortcutDetails': {
+                'targetId': file_id
+            }
+        }
+        
+        if(len(file_name) > 0):
+            shortcut_metadata['name'] = file_name
+        
+        if(len(folder_id) > 0):
+            shortcut_metadata['parents'] = [folder_id]
+        
+        shortcut = self.drive_service.files().create(body=shortcut_metadata, fields='id,shortcutDetails').execute()
+
+        return shortcut.get('id')
 
     def upload_file(self, name, file_path, folder_id, mime_type = None):
         fileType = mime_type
