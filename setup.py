@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pygdrive3",
-    version="0.7.0",
+    version="0.8.0",
     author="Matheus Almeida",
     author_email="mat.almeida@live.com",
     description="Use Google Drive API v3 with a python interface",
